@@ -1,10 +1,18 @@
 pipeline {
-    agent any 
+    agent any
     stages {
-        stage('Stage 1'){
+        stage('Build Docker Image') {
+            when {
+                branch 'master'
+            }
             steps {
-                echo "hello world"
+                script {
+                    app = docker.build("huynhminhchu/demo-rails")
+                    app.inside {
+                        sh 'echo $(curl localhost:8080)'
+                    }
+                }
             }
         }
-    }
+    }   
 }

@@ -5,9 +5,10 @@ pipeline {
             steps {
                 script {
                     app = docker.build("huynhminhchu/demo-rails")
-                    app.inside {
+                    docker.image("huynhminhchu/demo-rails").withRun('-p 3306:3306'){
                         sh 'echo $(curl localhost:8080)'
                     }
+                    
                 }
             }
         }

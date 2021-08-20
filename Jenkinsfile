@@ -3,14 +3,11 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                script {
-                    app = docker.build("huynhminhchu/demo-rails")
-                    docker.image("huynhminhchu/demo-rails").withRun('-p 3000:3000'){
-                        sleep 60
-                        sh 'echo $(curl localhost:8080)'
-                    }
-                    
-                }
+                sh 'docker-compose build'
+                sh 'docker-compose run web scripts/wait-for-it.sh db:5432 -- "rake db:create db:migrate"'
+                sh 'docker-compose up'
+                sleep 60
+                sh 'echo $(curl localhost:8080)'
             }
         }
     }   
